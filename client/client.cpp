@@ -27,7 +27,7 @@ Socket::~Socket()
     WSACleanup();
 }
 
-bool Socket::work(const char filename[])
+bool Socket::work(const char path[])
 {
     rval = connect(c_socket, (sockaddr*)&serverAddr, sizeof(serverAddr));
     if (rval == -1) 
@@ -35,6 +35,11 @@ bool Socket::work(const char filename[])
         cout << "Can not create connect!" << endl;
         exit(0);
     }
+
+    name = path;
+    size_t lastPos = name.find_last_of("/\\");
+    name = name.substr(lastPos + 1);
+	char* filename = const_cast<char*>(name.c_str());
 
     strcpy(buf, filename);
     send(c_socket, buf, BUFSIZE, 0);

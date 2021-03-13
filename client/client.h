@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <winsock2.h> 
 #pragma comment(lib,"ws2_32.lib")
 
@@ -17,6 +18,9 @@ private:
     char buf[BUFSIZE];
     int rval = 0;
     ifstream ifs;
+
+public:
+    string name;
 
 public:
     Socket(const char addr[], const int port);

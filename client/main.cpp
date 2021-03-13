@@ -18,12 +18,12 @@ int main(int argc, char **argv)
         flag = c_socket->work(argv[i]);
         if(flag)
         {
-            cout << left << setw(10) << "Successd:" << argv[i] << endl;
+            cout << left << setw(10) << "Successd:" << c_socket->name << endl;
         }
         else
         {
             //cout << "ip: " << argv[1] << ":" << port << endl;
-            cout << left << setw(10) << "Failed:" << argv[i] << endl;
+            cout << left << setw(10) << "Failed:" << c_socket->name << endl;
         }
         delete c_socket;
         c_socket = NULL;
