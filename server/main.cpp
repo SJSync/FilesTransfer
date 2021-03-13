@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include "server.h"
 
 using namespace std;
@@ -14,12 +15,13 @@ int main(int argc, char **argv)
         flag = s_socket.work();
         if(flag)
         {
-            cout << "Successd: " << s_socket.file << endl;
+            cout << left << setw(18) << s_socket.clientIp 
+            << left << setw(10) << "Successd:" << s_socket.file << endl;
         }
         else
         {
-            //cout << "ip: " << argv[1] << ":" << port << endl;
-            cout << "Failed: " << s_socket.file << endl;
+            cout << left << setw(18) << s_socket.clientIp 
+            << left << setw(10) << "Failed:" << s_socket.file << endl;
         }
     }
 }

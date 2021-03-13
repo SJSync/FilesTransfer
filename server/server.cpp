@@ -47,6 +47,9 @@ bool Socket::work()
         cout << "Accept exception" << endl;
         exit(0);
     }
+    
+    strcpy(clientIp, inet_ntoa(tcpAddr.sin_addr));
+    clientPort = ntohs(tcpAddr.sin_port);
 
     recv(s_socket, filename, BUFSIZE, 0);
     strcpy(file, filename);

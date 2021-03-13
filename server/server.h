@@ -21,6 +21,8 @@ private:
 
 public:
     char file[BUFSIZE];
+    char clientIp[128];
+    int clientPort;
 
 public:
     Socket(const int port);

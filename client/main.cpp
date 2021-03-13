@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include "client.h"
 
 using namespace std;
@@ -17,12 +18,12 @@ int main(int argc, char **argv)
         flag = c_socket->work(argv[i]);
         if(flag)
         {
-            cout << "Successd: " << argv[i] << endl;
+            cout << left << setw(10) << "Successd:" << argv[i] << endl;
         }
         else
         {
             //cout << "ip: " << argv[1] << ":" << port << endl;
-            cout << "Failed: " << argv[i] << endl;
+            cout << left << setw(10) << "Failed:" << argv[i] << endl;
         }
         delete c_socket;
         c_socket = NULL;
