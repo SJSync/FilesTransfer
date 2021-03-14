@@ -4,8 +4,20 @@
 
 using namespace std;
 
+void help()
+{
+    cout << "client.exe [IP Address] [Port] [FilePath_1] [FilePath_2] ..." << endl;
+    cout << endl;
+}
+
 int main(int argc, char **argv)
 {
+    if(argc == 1 || (argc == 2 &&(strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0)))
+    {
+        help();
+        return 0;
+    }
+
     char* serverip = argv[1];
     int port = atoi(argv[2]);
     bool flag = false;
@@ -22,13 +34,13 @@ int main(int argc, char **argv)
         }
         else
         {
-            //cout << "ip: " << argv[1] << ":" << port << endl;
             cout << left << setw(10) << "Failed:" << c_socket->name << endl;
         }
         delete c_socket;
         c_socket = NULL;
     }
+    cout << endl;
     return 0;
 }
 
-// g++ main.cpp client.cpp -lws2_32 -o client
+// g++ main.cpp client.cpp -l ws2_32 -o client

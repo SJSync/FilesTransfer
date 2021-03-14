@@ -51,7 +51,6 @@ bool Socket::work(const char path[])
         {
             return false;
         }
-        // cout << "sendfile done" << endl;
         closesocket(c_socket);
     }
     return true;
@@ -63,7 +62,7 @@ bool Socket::sendFile(const char filename[])
     ifs.open(filename, ios::in | ios::binary);
     if(!ifs.is_open()) 
     {
-        cout << "Can not open " << filename << endl;
+        cout << "Can not open the file" << filename << endl;
         exit(0);
     }
 

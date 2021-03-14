@@ -61,7 +61,6 @@ bool Socket::work()
     {
         return false;
     }
-    // cout << "recvfile done" << endl;
     closesocket(s_socket);
 
     return true;
@@ -73,7 +72,7 @@ bool Socket::recvFile(const char filename[])
     ofs.open(filename, ios::out | ios::binary);
     if(!ofs.is_open())
     {
-        cout << "Can not open file" << filename << endl;
+        cout << "Can not open the file" << filename << endl;
         exit(0);
     }
 
@@ -90,7 +89,6 @@ bool Socket::recvFile(const char filename[])
         {
             break;
         }
-        // cout << "readLen: " << readLen << endl;
 	    ofs.write(buf, readLen);
         memset(buf, 0, sizeof(buf));
     } while(true);
