@@ -72,7 +72,7 @@ bool Socket::recvFile(const char filename[])
     ofs.open(filename, ios::out | ios::binary);
     if(!ofs.is_open())
     {
-        cout << "Can not open the file" << filename << endl;
+        cout << "Can not open " << filename << endl;
         exit(0);
     }
 

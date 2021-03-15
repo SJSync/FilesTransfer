@@ -20,6 +20,8 @@ private:
     ifstream ifs;
 
 public:
+    size_t fileSize;
+    size_t sentBytes;
     string name;
 
 public:

@@ -4,6 +4,9 @@ using namespace std;
 
 Socket::Socket(const char addr[], const int port)
 {
+    fileSize = 0;
+    sentBytes = 0;
+
     wVersionRequested = MAKEWORD(2, 2);
     WSAStartup(wVersionRequested, &wsaData);
     if ((c_socket = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
@@ -47,7 +50,7 @@ bool Socket::work(const char path[])
     recv(c_socket, buf, BUFSIZE, 0);
     if(strcmp(buf, "recv") == 0)
     {
-        if(!sendFile(filename))
+        if(!sendFile(path))
         {
             return false;
         }
@@ -56,15 +59,21 @@ bool Socket::work(const char path[])
     return true;
 }
 
-bool Socket::sendFile(const char filename[])
+bool Socket::sendFile(const char path[])
 {
     int readLen = 0;
-    ifs.open(filename, ios::in | ios::binary);
+    sentBytes = 0;
+
+    ifs.open(path, ios::in | ios::binary);
     if(!ifs.is_open()) 
     {
-        cout << "Can not open the file" << filename << endl;
+        cout << "Can not open " << path << endl;
         exit(0);
     }
+
+    ifs.seekg(0, ios::end);
+    fileSize = ifs.tellg();
+    ifs.seekg(0, ios::beg);
 
     memset(buf, 0, sizeof(buf));
     while(!ifs.eof())
