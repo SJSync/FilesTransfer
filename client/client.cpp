@@ -65,7 +65,7 @@ bool Socket::sendFile(const char path[])
     sentBytes = 0;
 
     ifs.open(path, ios::in | ios::binary);
-    if(!ifs.is_open()) 
+    if(!ifs.is_open())
     {
         cout << "Can not open " << path << endl;
         exit(0);
@@ -80,6 +80,7 @@ bool Socket::sendFile(const char path[])
     {
         ifs.read(buf, BUFSIZE);
         readLen = ifs.gcount();
+        sentBytes += readLen;
         if(send(c_socket, buf, readLen, 0) == -1)
         {
             ifs.close();
