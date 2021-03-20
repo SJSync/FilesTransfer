@@ -30,7 +30,7 @@ int main(int argc, char **argv)
         flag = c_socket->work(argv[i]);
         if(flag)
         {
-            cout << "Size: " << c_socket->fileSize << endl;
+            cout << "Size: " << c_socket->fileSize / 1024 / 1024 << "MB" << endl;
             cout << left << setw(10) << "Successd:" << c_socket->name << endl;
         }
         else

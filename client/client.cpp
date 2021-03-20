@@ -1,6 +1,5 @@
 #include "client.h"
 
-using namespace std;
 
 Socket::Socket(const char addr[], const int port)
 {
@@ -11,7 +10,7 @@ Socket::Socket(const char addr[], const int port)
     WSAStartup(wVersionRequested, &wsaData);
     if ((c_socket = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
     {
-        cout << "Can not create socket!" << endl;
+        std::cout << "Can not create socket!" << std::endl;
         exit(0);
     }
 
@@ -35,7 +34,7 @@ bool Socket::work(const char path[])
     rval = connect(c_socket, (sockaddr*)&serverAddr, sizeof(serverAddr));
     if (rval == -1) 
     {
-        cout << "Can not create connect!" << endl;
+        std::cout << "Can not create connect!" << std::endl;
         exit(0);
     }
 
@@ -64,16 +63,16 @@ bool Socket::sendFile(const char path[])
     int readLen = 0;
     sentBytes = 0;
 
-    ifs.open(path, ios::in | ios::binary);
+    ifs.open(path, std::ios::in | std::ios::binary);
     if(!ifs.is_open())
     {
-        cout << "Can not open " << path << endl;
+        std::cout << "Can not open " << path << std::endl;
         exit(0);
     }
 
-    ifs.seekg(0, ios::end);
+    ifs.seekg(0, std::ios::end);
     fileSize = ifs.tellg();
-    ifs.seekg(0, ios::beg);
+    ifs.seekg(0, std::ios::beg);
 
     memset(buf, 0, sizeof(buf));
     while(!ifs.eof())

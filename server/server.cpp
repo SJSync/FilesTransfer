@@ -1,6 +1,5 @@
 #include "server.h"
 
-using namespace std;
 
 Socket::Socket(const int port)
 {
@@ -8,7 +7,7 @@ Socket::Socket(const int port)
     WSAStartup(wVersionRequested, &wsaData);
     if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
     {
-        cout << "Can not create socket!" << endl;
+        std::cout << "Can not create socket!" << std::endl;
         exit(0);
     }
 
@@ -21,7 +20,7 @@ Socket::Socket(const int port)
     rval = bind(sockfd, (struct sockaddr*)&server, sizeof(server));
     if (rval == -1) 
     {
-        cout << "Can not create connect!" << endl;
+        std::cout << "Can not create connect!" << std::endl;
         exit(0);
     }
 
@@ -44,7 +43,7 @@ bool Socket::work()
     int tcpAddrLenth = sizeof(tcpAddr);
     if((s_socket = accept(sockfd, (struct sockaddr*)&tcpAddr, &tcpAddrLenth)) == INVALID_SOCKET)
     {
-        cout << "Accept exception" << endl;
+        std::cout << "Accept exception" << std::endl;
         exit(0);
     }
     
@@ -57,7 +56,7 @@ bool Socket::work()
     strcpy(buf, "recv");
     send(s_socket, buf, BUFSIZE, 0);
 
-    if(!recvFile(filename))
+    if(!recvFile(filename, time))
     {
         return false;
     }
@@ -66,13 +65,16 @@ bool Socket::work()
     return true;
 }
 
-bool Socket::recvFile(const char filename[])
+bool Socket::recvFile(const char filename[], double& time)
 {
+    auto start = std::chrono::system_clock::now();
+
+    fileSize = 0;
     int readLen = 0;
-    ofs.open(filename, ios::out | ios::binary);
+    ofs.open(filename, std::ios::out | std::ios::binary);
     if(!ofs.is_open())
     {
-        cout << "Can not open " << filename << endl;
+        std::cout << "Can not open " << filename << std::endl;
         exit(0);
     }
 
@@ -89,10 +91,14 @@ bool Socket::recvFile(const char filename[])
         {
             break;
         }
+        fileSize += readLen;
 	    ofs.write(buf, readLen);
         memset(buf, 0, sizeof(buf));
     } while(true);
 
     ofs.close();
+
+    std::chrono::duration<double> diff = std::chrono::system_clock::now() - start;
+    time = diff.count();
     return true;
 }
