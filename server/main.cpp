@@ -1,8 +1,20 @@
 #include <iostream>
 #include <iomanip>
+#include <chrono>
 #include "server.h"
 
 using namespace std;
+
+/*
+template <class T>
+void measure(T&& func)
+{
+    auto start = chrono::system_clock::now();
+    func();
+    chrono::duration<double> diff = chrono::system_clock::now() - start;
+    cout << diff << endl;
+}
+*/
 
 void help()
 {
@@ -27,8 +39,8 @@ int main(int argc, char **argv)
         flag = s_socket.work();
         if(flag)
         {
-            cout << left << setw(18) << s_socket.clientIp 
-            << left << setw(10) << "Successd:" << s_socket.file << endl;
+            cout << left << setw(18) << s_socket.clientIp << left << setw(10) << "Successd:" 
+            << s_socket.file << " [" << s_socket.fileSize * 8 / 1024 / 1024 / s_socket.time << "Mbps]" << endl;
         }
         else
         {

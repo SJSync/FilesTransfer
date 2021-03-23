@@ -1,11 +1,10 @@
 #include <iostream>
 #include <fstream>
+#include <chrono>
 #include <winsock2.h> 
 #pragma comment(lib,"ws2_32.lib")
 
 #define BUFSIZE 1024
-
-using namespace std;
 
 class Socket
 {
@@ -17,7 +16,7 @@ private:
     struct sockaddr_in tcpAddr;
     char buf[BUFSIZE];
     int rval = 0;
-    ofstream ofs;
+    std::ofstream ofs;
 
 public:
     char file[BUFSIZE];
@@ -25,8 +24,12 @@ public:
     int clientPort;
 
 public:
+    int fileSize;
+    double time;
+
+public:
     Socket(const int port);
     ~Socket();
     bool work();
-    bool recvFile(const char filename[]);
+    bool recvFile(const char filename[], double& time);
 };

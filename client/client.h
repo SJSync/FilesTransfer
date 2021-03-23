@@ -6,7 +6,6 @@
 
 #define BUFSIZE 1024
 
-using namespace std;
 
 class Socket
 {
@@ -17,12 +16,12 @@ private:
     struct sockaddr_in serverAddr;
     char buf[BUFSIZE];
     int rval = 0;
-    ifstream ifs;
+    std::ifstream ifs;
 
 public:
     size_t fileSize;
     size_t sentBytes;
-    string name;
+    std::string name;
 
 public:
     Socket(const char addr[], const int port);
