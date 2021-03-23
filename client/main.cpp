@@ -44,4 +44,4 @@ int main(int argc, char **argv)
     return 0;
 }
 
-// g++ main.cpp client.cpp -l ws2_32 -o client
+// g++ --static main.cpp client.cpp -l ws2_32 -o client
