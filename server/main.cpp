@@ -16,9 +16,9 @@ void measure(T&& func)
 }
 */
 
-void help()
+void help(const char* progname)
 {
-    cout << "server.exe [Listening Port]" << endl;
+    cout << progname << " [Listening Port]" << endl;
     cout << endl;
 }
 
@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 {
     if(argc == 1 || (argc == 2 &&(strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0)))
     {
-        help();
+        help(argv[0]);
         return 0;
     }
 

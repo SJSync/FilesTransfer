@@ -4,9 +4,9 @@
 
 using namespace std;
 
-void help()
+void help(const char* progname)
 {
-    cout << "client.exe [IP Address] [Port] [FilePath_1] [FilePath_2] ..." << endl;
+    cout << progname << " [IP Address] [Port] [FilePath_1] [FilePath_2] ..." << endl;
     cout << endl;
 }
 
@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 {
     if(argc == 1 || (argc == 2 &&(strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0)))
     {
-        help();
+        help(argv[0]);
         return 0;
     }
 
