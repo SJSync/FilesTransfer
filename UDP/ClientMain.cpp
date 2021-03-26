@@ -4,9 +4,13 @@
 
 using namespace std;
 
-void help(const char* progname)
+void help(const char* name)
 {
-    cout << progname << " [IP Address] [Port] [FilePath_1] [FilePath_2] ..." << endl;
+    std::string progname = name;
+    size_t lastPos = progname.find_last_of("/\\");
+    progname = progname.substr(lastPos + 1);
+
+    cout << ".\\" << progname << " [IP Address] [Port] [FilePath_1] [FilePath_2] ..." << endl;
     cout << endl;
 }
 
@@ -22,23 +26,26 @@ int main(int argc, char **argv)
     int port = atoi(argv[2]);
     bool flag = false;
 
-    Socket* c_socket = NULL;
+    Client* client = NULL;
 
+    cout << endl;
     for(int i = 3; i < argc; i++)
     {
-        c_socket = new Socket(serverip, port);
-        flag = c_socket->work(argv[i]);
+        client = new Client(serverip, port);
+        flag = client->work(argv[i]);
+
         if(flag)
         {
-            cout << "Size: " << c_socket->fileSize / 1024 / 1024 << "MB" << endl;
-            cout << left << setw(10) << "Successd:" << c_socket->name << endl;
+            cout << left << setw(10) << "Successd:" << client->name;
+            cout << right << setw(15) << "Size: " << client->fileSize / 1024 / 1024 << "MB" << endl;
         }
         else
         {
-            cout << left << setw(10) << "Failed:" << c_socket->name << endl;
+            cout << left << setw(10) << "Failed:" << client->name << endl;
         }
-        delete c_socket;
-        c_socket = NULL;
+
+        delete client;
+        client = NULL;
     }
     cout << endl;
     return 0;

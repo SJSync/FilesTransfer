@@ -6,7 +6,7 @@
 
 #define BUFSIZE 1024
 
-class Socket
+class Server
 {
 private:
     WORD wVersionRequested;
@@ -24,12 +24,13 @@ public:
     int clientPort;
 
 public:
-    int fileSize;
+    size_t fileSize;
+    size_t recvSize;
     double time;
 
 public:
-    Socket(const int port);
-    ~Socket();
+    Server(const int port);
+    ~Server();
     bool work();
     bool recvFile(const char filename[], double& time);
 };
