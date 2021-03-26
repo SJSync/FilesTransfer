@@ -1,7 +1,7 @@
 #include "client.h"
 
 
-Socket::Socket(const char addr[], const int port)
+Client::Client(const char addr[], const int port)
 {
     fileSize = 0;
     sentBytes = 0;
@@ -20,7 +20,7 @@ Socket::Socket(const char addr[], const int port)
     memset(serverAddr.sin_zero, 0, sizeof(serverAddr.sin_zero));
 }
 
-Socket::~Socket()
+Client::~Client()
 {
     if(c_socket != INVALID_SOCKET)
     {
@@ -29,7 +29,7 @@ Socket::~Socket()
     WSACleanup();
 }
 
-bool Socket::work(const char path[])
+bool Client::work(const char path[])
 {
     rval = connect(c_socket, (sockaddr*)&serverAddr, sizeof(serverAddr));
     if (rval == -1) 
@@ -58,7 +58,7 @@ bool Socket::work(const char path[])
     return true;
 }
 
-bool Socket::sendFile(const char path[])
+bool Client::sendFile(const char path[])
 {
     int readLen = 0;
     sentBytes = 0;

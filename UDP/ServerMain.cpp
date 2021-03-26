@@ -16,9 +16,13 @@ void measure(T&& func)
 }
 */
 
-void help(const char* progname)
+void help(const char* name)
 {
-    cout << progname << " [Listening Port]" << endl;
+    std::string progname = name;
+    size_t lastPos = progname.find_last_of("/\\");
+    progname = progname.substr(lastPos + 1);
+
+    cout << ".\\" << progname << " [IP Address] [Port] [FilePath_1] [FilePath_2] ..." << endl;
     cout << endl;
 }
 
@@ -33,19 +37,21 @@ int main(int argc, char **argv)
     int port = atoi(argv[1]);
     bool flag = false;
 
-    Socket s_socket(port);
+    Server server(port);
     while(true)
     {
-        flag = s_socket.work();
+        flag = server.work();
         if(flag)
         {
-            cout << left << setw(18) << s_socket.clientIp << left << setw(10) << "Successd:" 
-            << s_socket.file << " [" << s_socket.fileSize * 8 / 1024 / 1024 / s_socket.time << "Mbps]" << endl;
+            cout << left << setw(18) << server.clientIp ;
+            cout << left << setw(10) << "Successd:" << server.file;
+            cout << right << setw(10) << " Size:" << server.fileSize / 1024 / 1024 << "MB";
+            cout << right << setw(5) << " [" << server.fileSize * 8 / 1024 / 1024 / server.time << "Mbps]" << endl;
         }
         else
         {
-            cout << left << setw(18) << s_socket.clientIp 
-            << left << setw(10) << "Failed:" << s_socket.file << endl;
+            cout << left << setw(18) << server.clientIp 
+            << left << setw(10) << "Failed:" << server.file << endl;
         }
     }
     return 0;

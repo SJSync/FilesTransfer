@@ -1,6 +1,6 @@
 #include "server.h"
 
-Socket::Socket(const int port)
+Server::Server(const int port)
 {
     wVersionRequested = MAKEWORD(2, 2);
     WSAStartup(wVersionRequested, &wsaData);
@@ -26,7 +26,7 @@ Socket::Socket(const int port)
     listen(sockfd, 5);
 }
 
-Socket::~Socket()
+Server::~Server()
 {
     if(s_socket != INVALID_SOCKET)
     {
@@ -36,7 +36,7 @@ Socket::~Socket()
     WSACleanup();
 }
 
-bool Socket::work()
+bool Server::work()
 {
     char filename[BUFSIZE] = {0};
     int tcpAddrLenth = sizeof(tcpAddr);
@@ -64,11 +64,11 @@ bool Socket::work()
     return true;
 }
 
-bool Socket::recvFile(const char filename[], double& time)
+bool Server::recvFile(const char filename[], double& time)
 {
     auto start = std::chrono::system_clock::now();
 
-    fileSize = 0;
+    recvSize = 0;
     int readLen = 0;
     ofs.open(filename, std::ios::out | std::ios::binary);
     if(!ofs.is_open())
@@ -90,14 +90,17 @@ bool Socket::recvFile(const char filename[], double& time)
         {
             break;
         }
-        fileSize += readLen;
+        recvSize += readLen;
 	    ofs.write(buf, readLen);
         memset(buf, 0, sizeof(buf));
     } while(true);
 
     ofs.close();
 
+    fileSize = recvSize;
+
     std::chrono::duration<double> diff = std::chrono::system_clock::now() - start;
     time = diff.count();
+
     return true;
 }

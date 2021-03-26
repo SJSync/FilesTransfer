@@ -7,7 +7,7 @@
 #define BUFSIZE 1024
 
 
-class Socket
+class Client
 {
 private:
     WORD wVersionRequested;
@@ -24,8 +24,8 @@ public:
     std::string name;
 
 public:
-    Socket(const char addr[], const int port);
-    ~Socket();
+    Client(const char addr[], const int port);
+    ~Client();
     bool work(const char filename[]);
     bool sendFile(const char filename[]);
 };
