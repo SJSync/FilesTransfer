@@ -21,17 +21,3 @@ public:
     Timer(double timeout);
     ~Timer();
 };
-
-Timer::Timer(double timeoutMillis)
-{
-    this->timeout = timeoutMillis;
-    this->isRunning = false;
-}
-
-Timer::~Timer()
-{
-    if(isRunning)
-    {
-        isRunning = false;
-    }
-}
