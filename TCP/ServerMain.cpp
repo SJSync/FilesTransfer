@@ -51,4 +51,4 @@ int main(int argc, char **argv)
     return 0;
 }
 
-// g++ --static main.cpp server.cpp -l ws2_32 -o server
+// g++ --static ServerMain.cpp server.cpp -l ws2_32 -o server
