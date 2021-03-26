@@ -1,5 +1,4 @@
 #include "server.h"
-// test
 
 Socket::Socket(const int port)
 {
