@@ -44,9 +44,9 @@ int main(int argc, char **argv)
         if(flag)
         {
             cout << left << setw(18) << server.clientIp ;
-            cout << left << setw(10) << "Successd:" << server.file;
-            cout << right << setw(10) << " Size:" << server.fileSize / 1024 / 1024 << "MB";
-            cout << right << setw(5) << " [" << server.fileSize * 8 / 1024 / 1024 / server.time << "Mbps]" << endl;
+            cout << left << setw(10) << "Successd:" << left << setw(20) << server.file;
+            cout << " Size: " << left << setw(10) << std::to_string(server.fileSize / 1024 / 1024) + "MB";
+            cout << "  [" + std::to_string(server.fileSize * 8 / 1024 / 1024 / server.time) + "Mbps]" << endl;
         }
         else
         {

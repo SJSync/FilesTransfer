@@ -1,3 +1,6 @@
+#ifndef _CLIENT_H
+#define _CLIENT_H
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -29,3 +32,5 @@ public:
     bool work(const char filename[]);
     bool sendFile(const char filename[]);
 };
+
+#endif
