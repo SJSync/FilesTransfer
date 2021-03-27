@@ -3,9 +3,11 @@
 
 Client::Client(const char addr[], const int port)
 {
+    // 初始化文件大小和已发送字节
     fileSize = 0;
     sentBytes = 0;
 
+    // 初始化socket版本
     wVersionRequested = MAKEWORD(2, 2);
     WSAStartup(wVersionRequested, &wsaData);
     if ((c_socket = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
