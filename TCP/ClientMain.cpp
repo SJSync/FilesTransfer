@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include "client.h"
+#include "timer.h"
 
 using namespace std;
 
@@ -32,12 +33,16 @@ int main(int argc, char **argv)
     for(int i = 3; i < argc; i++)
     {
         client = new Client(serverip, port);
+        Timer timer(200);
+        
+        timer.start(client->fileSize, client->sentBytes);
         flag = client->work(argv[i]);
+        timer.stop();
 
         if(flag)
         {
-            cout << left << setw(10) << "Successd:" << client->name;
-            cout << right << setw(15) << "Size: " << client->fileSize / 1024 / 1024 << "MB" << endl;
+            cout << left << setw(10) << "Successd: " << left << setw(20) << client->name;
+            cout << " Size: " + std::to_string(client->fileSize / 1024 / 1024) + "MB" << endl;
         }
         else
         {

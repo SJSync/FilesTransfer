@@ -1,3 +1,6 @@
+#ifndef _SERVER_H
+#define _SERVER_H
+
 #include <iostream>
 #include <fstream>
 #include <chrono>
@@ -34,3 +37,5 @@ public:
     bool work();
     bool recvFile(const char filename[], double& time);
 };
+
+#endif

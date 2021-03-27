@@ -1,16 +1,27 @@
 #include "timer.h"
 
-void work(bool& isRunning, int timeout)
+std::mutex sleepMutex;
+std::condition_variable condition;
+
+void loader(bool& isRunning, int timeout, const size_t&fileSize, const size_t& sentBytes)
 {
+    size_t status;
+
     std::unique_lock<std::mutex> sleepLock(sleepMutex);
     while(isRunning)
     {
         condition.wait_for(sleepLock, std::chrono::milliseconds(timeout));
-
+        /*
         auto timePoint = std::chrono::system_clock::now();
         std::time_t currentTime = std::chrono::system_clock::to_time_t(timePoint);
 
         std::cout << "currentTime: " << currentTime << " isRunning: " << isRunning << std::endl;
+        */
+       //std::cout << "Send: " << sentBytes << "/" << fileSize << std::endl;
+       status = sentBytes * 100 / fileSize + 1;
+
+       std::cout << "[" << std::right << std::setw(3) << status << "%]";
+       std::cout << "\r";
     }
 }
 
@@ -28,10 +39,11 @@ Timer::~Timer()
     }
 }
 
-void Timer::start()
+// 装载定时触发器，定时触发进度条更新函数
+void Timer::start(const size_t&fileSize, const size_t& sentBytes)
 {
     isRunning = true;
-    std::thread th = std::thread(work, std::ref(isRunning), timeout);
+    std::thread th = std::thread(loader, std::ref(isRunning), timeout, std::ref(fileSize), std::ref(sentBytes));
     th.detach();
 }
 
