@@ -1,3 +1,6 @@
+#ifndef _CLIENT_H
+#define _CLIENT_H
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -14,7 +17,7 @@ private:
     WORD wVersionRequested;
     WSADATA wsaData;
     // 描述服务器的套接字
-    SOCKET c_socket;
+    SOCKET s_socket;
     struct sockaddr_in serverAddr;
     char buf[BUFSIZE];
     // 接受反馈
@@ -39,3 +42,5 @@ private:
     // 通过套接字发送文件
     bool sendFile(const char filename[]);
 };
+
+#endif

@@ -13,7 +13,7 @@ Client::Client(const char addr[], const int port)
     WSAStartup(wVersionRequested, &wsaData);
 
     // 建立描述服务器的套接字
-    if ((c_socket = socket(AF_INET, SOCK_DGRAM, 0)) == INVALID_SOCKET)
+    if ((s_socket = socket(AF_INET, SOCK_DGRAM, 0)) == INVALID_SOCKET)
     {
         std::cout << "Can not create socket!" << std::endl;
         exit(0);
@@ -32,9 +32,9 @@ Client::Client(const char addr[], const int port)
 // 析构函数，如果套接字存在，就关闭
 Client::~Client()
 {
-    if(c_socket != INVALID_SOCKET)
+    if(s_socket != INVALID_SOCKET)
     {
-        closesocket(c_socket);
+        closesocket(s_socket);
     }
     // 清除Socket信息
     WSACleanup();
@@ -52,10 +52,10 @@ bool Client::work(const char path[])
 
     // 向远端发送文件名
     strcpy(buf, filename);
-    sendto(c_socket, buf, BUFSIZE, 0,(struct sockaddr*)&serverAddr,sizeof(serverAddr) );
+    sendto(s_socket, buf, BUFSIZE, 0,(struct sockaddr*)&serverAddr,sizeof(serverAddr) );
 
     // 确认收到文件名
-    recvfrom(c_socket, buf, BUFSIZE, 0,(struct sockaddr*)&serverAddr,&addr_len);
+    recvfrom(s_socket, buf, BUFSIZE, 0,(struct sockaddr*)&serverAddr,&addr_len);
     if(strcmp(buf, "recv") == 0)
     {
         // 开始发送文件
@@ -65,7 +65,7 @@ bool Client::work(const char path[])
             return false;
         }
         // 发送成功后就关闭套接字
-        closesocket(c_socket);
+        closesocket(s_socket);
     }
     return true;
 }
@@ -101,7 +101,7 @@ bool Client::sendFile(const char path[])
         readLen = ifs.gcount();
         sentBytes += readLen;
         // 从buf缓冲数组发送readLen长度到远端
-        if(sendto(c_socket, buf, readLen, 0,(struct sockaddr*)&serverAddr,sizeof(serverAddr)) == -1)
+        if(sendto(s_socket, buf, readLen, 0,(struct sockaddr*)&serverAddr,sizeof(serverAddr)) == -1)
         {
             // 发送异常处理
             ifs.close();
