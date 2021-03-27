@@ -24,7 +24,7 @@ void help(const char* name)
     size_t lastPos = progname.find_last_of("/\\");
     progname = progname.substr(lastPos + 1);
 
-    cout << ".\\" << progname << " [IP Address] [Port] [FilePath_1] [FilePath_2] ..." << endl;
+    cout << ".\\" << progname << " [Port]" << endl;
     cout << endl;
 }
 
