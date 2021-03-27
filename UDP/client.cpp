@@ -42,7 +42,7 @@ Client::~Client()
 
 bool Client::work(const char path[])
 {
-    int addr_len = sizeof(struct sockaddr_in);
+    int addr_len = sizeof(serverAddr);
 
     // 从文件路径截取文件名
     name = path;
@@ -52,10 +52,10 @@ bool Client::work(const char path[])
 
     // 向远端发送文件名
     strcpy(buf, filename);
-    sendto(s_socket, buf, BUFSIZE, 0,(struct sockaddr*)&serverAddr,sizeof(serverAddr) );
+    sendto(s_socket, buf, BUFSIZE, 0, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
 
     // 确认收到文件名
-    recvfrom(s_socket, buf, BUFSIZE, 0,(struct sockaddr*)&serverAddr,&addr_len);
+    recvfrom(s_socket, buf, BUFSIZE, 0, (struct sockaddr*)&serverAddr, &addr_len);
     if(strcmp(buf, "recv") == 0)
     {
         // 开始发送文件
@@ -101,12 +101,15 @@ bool Client::sendFile(const char path[])
         readLen = ifs.gcount();
         sentBytes += readLen;
         // 从buf缓冲数组发送readLen长度到远端
-        if(sendto(s_socket, buf, readLen, 0,(struct sockaddr*)&serverAddr,sizeof(serverAddr)) == -1)
+        if(sendto(s_socket, buf, readLen, 0, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) == -1)
         {
             // 发送异常处理
             ifs.close();
             return false;
         }
+
+        // std::cout << readLen << std::endl;
+
         // 初始化buf缓冲数组为0
         memset(buf, 0, sizeof(buf));
     }

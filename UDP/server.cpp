@@ -25,16 +25,24 @@ Server::Server(const int port)
     // 填充0
     memset(server.sin_zero, 0, sizeof(server.sin_zero));
 
+    // 将本机IP和端口与sockfd绑定
+    rval = bind(sockfd, (struct sockaddr*)&server, sizeof(server));
+    if (rval == -1) 
+    {
+        // 异常处理
+        std::cout << "Can not create connect!" << std::endl;
+        exit(0);
+    }
+
 }
 
 // 析构函数，如果套接字存在，就关闭
 Server::~Server()
 {
-    if(s_socket != INVALID_SOCKET)
+    if(sockfd != INVALID_SOCKET)
     {
-        closesocket(s_socket);
+        closesocket(sockfd);
     }
-    closesocket(sockfd);
     // 清除Socket信息
     WSACleanup();
 }
@@ -43,25 +51,18 @@ bool Server::work()
 {
     char filename[BUFSIZE] = {0};
     int tcpAddrLenth = sizeof(tcpAddr);
-    // s_socket接受sockfd返回的socket描述符，tcpaddr存放客户端的信息
-    if((s_socket = accept(sockfd, (struct sockaddr*)&tcpAddr, &tcpAddrLenth)) == INVALID_SOCKET)
-    {
-        // 异常处理
-        std::cout << "Accept exception" << std::endl;
-        exit(0);
-    }
-    
+
+    // 接收文件名
+    recvfrom(sockfd, filename, BUFSIZE, 0, (struct sockaddr*)&tcpAddr, &tcpAddrLenth);
+    strcpy(file, filename);
+
     // 转换IP地址
     strcpy(clientIp, inet_ntoa(tcpAddr.sin_addr));
     clientPort = ntohs(tcpAddr.sin_port);
 
-    // 接收文件名
-    recv(s_socket, filename, BUFSIZE, 0);
-    strcpy(file, filename);
-
     // 发送确认信息
     strcpy(buf, "recv");
-    send(s_socket, buf, BUFSIZE, 0);
+    sendto(sockfd, buf, BUFSIZE, 0, (struct sockaddr*)&tcpAddr, sizeof(tcpAddr));
 
     // 接受文件
     if(!recvFile(filename, time))
@@ -69,7 +70,7 @@ bool Server::work()
         return false;
     }
     // 接收成功后就关闭套接字
-    closesocket(s_socket);
+    closesocket(sockfd);
 
     return true;
 }
@@ -95,27 +96,32 @@ bool Server::recvFile(const char filename[], double& time)
     memset(buf, 0, sizeof(buf));
     do
     {
-        readLen = recv(s_socket, buf, BUFSIZE, 0);
+        int tcpAddrLenth = sizeof(tcpAddr);
+        readLen = recvfrom(sockfd, buf, BUFSIZE, 0, (struct sockaddr*)&tcpAddr, &tcpAddrLenth);
         if(readLen == -1)
 	    {
             // 异常处理
 	        ofs.close();
             return false;
 	    }
-        else if(readLen == 0)
-        {
-            // readLen为0说明远端已经传输完成并且断开了TCP连接
-            break;
-        }
         recvSize += readLen;
+
+        // std::cout << readLen << std::endl;
 
         // 将buf缓冲数组的内容写入到文件流
 	    ofs.write(buf, readLen);
+
+        if(readLen < BUFSIZE)
+        {
+            // readLen小于缓冲区大小说明远端已经传输完成
+            break;
+        }
+
         // 初始化buf缓冲数组为0
         memset(buf, 0, sizeof(buf));
     } while(true);
 
-    // 接收成功后就关闭套接字
+    // 接收成功后就关闭文件流
     ofs.close();
 
     fileSize = recvSize;
