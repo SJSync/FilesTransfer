@@ -4,7 +4,7 @@ Server::Server(const int port)
 {
     wVersionRequested = MAKEWORD(2, 2);
     WSAStartup(wVersionRequested, &wsaData);
-    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
+    if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) == INVALID_SOCKET)
     {
         std::cout << "Can not create socket!" << std::endl;
         exit(0);
@@ -16,14 +16,6 @@ Server::Server(const int port)
     server.sin_addr.S_un.S_addr = htonl(INADDR_ANY);
     memset(server.sin_zero, 0, sizeof(server.sin_zero));
 
-    rval = bind(sockfd, (struct sockaddr*)&server, sizeof(server));
-    if (rval == -1) 
-    {
-        std::cout << "Can not create connect!" << std::endl;
-        exit(0);
-    }
-
-    listen(sockfd, 5);
 }
 
 Server::~Server()
@@ -66,6 +58,7 @@ bool Server::work()
 
 bool Server::recvFile(const char filename[], double& time)
 {
+    //开始计时
     auto start = std::chrono::system_clock::now();
 
     recvSize = 0;
