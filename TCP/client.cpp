@@ -83,7 +83,7 @@ bool Client::sendFile(const char path[])
     int readLen = 0;
     sentBytes = 0;
 
-    // 打开文件
+    //打开发送的文件
     ifs.open(path, std::ios::in | std::ios::binary);
     // 打开异常处理
     if(!ifs.is_open())
