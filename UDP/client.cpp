@@ -64,10 +64,20 @@ bool Client::work(const char path[])
             // 发送错误就返回
             return false;
         }
-        // 发送成功后就关闭套接字
-        closesocket(s_socket);
+
+        recvfrom(s_socket, buf, BUFSIZE, 0, (struct sockaddr*)&serverAddr, &addr_len);
+        if(strcmp(buf, "recvDone") == 0)
+        {
+            // 发送成功后就关闭套接字
+            closesocket(s_socket);
+        }
+        else
+        {
+            return false;
+        }
+        return true;
     }
-    return true;
+    return false;
 }
 
 bool Client::sendFile(const char path[])
@@ -107,8 +117,6 @@ bool Client::sendFile(const char path[])
             ifs.close();
             return false;
         }
-
-        // std::cout << readLen << std::endl;
 
         // 初始化buf缓冲数组为0
         memset(buf, 0, sizeof(buf));

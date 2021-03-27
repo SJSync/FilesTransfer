@@ -69,6 +69,9 @@ bool Server::work()
     {
         return false;
     }
+    // 发送接受完成的信息
+    strcpy(buf, "recvDone");
+    sendto(sockfd, buf, BUFSIZE, 0, (struct sockaddr*)&tcpAddr, sizeof(tcpAddr));
     // 接收成功后就关闭套接字
     closesocket(sockfd);
 
@@ -105,8 +108,6 @@ bool Server::recvFile(const char filename[], double& time)
             return false;
 	    }
         recvSize += readLen;
-
-        // std::cout << readLen << std::endl;
 
         // 将buf缓冲数组的内容写入到文件流
 	    ofs.write(buf, readLen);
