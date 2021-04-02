@@ -1,3 +1,7 @@
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
 #include "server.h"
 
 
@@ -136,4 +140,9 @@ bool Server::recvFile(const char filename[], double& time)
     time = diff.count();
 
     return true;
+}
+
+void Server::measureDelay()
+{
+    
 }

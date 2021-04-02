@@ -4,8 +4,9 @@
 #include <iostream>
 #include <fstream>
 #include <chrono>
-#include <winsock2.h> 
-#pragma comment(lib,"ws2_32.lib")
+#include <Winsock2.h> 
+#include <Ws2tcpip.h>
+#pragma comment(lib, "Ws2_32.lib")
 
 #define BUFSIZE 1024
 
@@ -64,6 +65,7 @@ public:
 private:
     // 通过套接字接受文件
     bool recvFile(const char filename[], double& time);
+    void measureDelay();
     
 };
 

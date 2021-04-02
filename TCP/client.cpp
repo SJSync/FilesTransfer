@@ -1,3 +1,7 @@
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
 #include "client.h"
 
 
@@ -18,6 +22,9 @@ Client::Client(const char addr[], const int port)
         std::cout << "Can not create socket!" << std::endl;
         exit(0);
     }
+
+    //unsigned char service_type = IPTOS_RELIABILITY;
+    //setsockopt(s_socket, IPPROTO_IP, IP_TOS, (char*)&tos, sizeof(tos));
 
     // 设置地址簇为Internet协议族
     serverAddr.sin_family = AF_INET;
@@ -121,4 +128,9 @@ bool Client::sendFile(const char path[])
     // 发送成功就关闭文件流
     ifs.close();
     return true;
+}
+
+void Client::measureDelay()
+{
+    
 }

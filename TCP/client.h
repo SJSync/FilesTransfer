@@ -4,8 +4,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <winsock2.h> 
-#pragma comment(lib,"ws2_32.lib")
+#include <Winsock2.h> 
+#include <Ws2tcpip.h>
+#pragma comment(lib, "Ws2_32.lib")
 
 #define BUFSIZE 1024
 
@@ -42,6 +43,7 @@ public:
 private:
     // 通过套接字发送文件
     bool sendFile(const char filename[]);
+    void measureDelay();
 };
 
 #endif
