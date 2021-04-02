@@ -144,5 +144,29 @@ bool Server::recvFile(const char filename[], double& time)
 
 void Server::measureDelay()
 {
-    
+    int PacketCount = 0;
+    while(true)
+    {
+        // 异常捕捉
+        try
+        {
+            memset(buf, 0, BUFSIZE);
+            if(recv(s_socket, buf, BUFSIZE, 0) == -1)
+            {
+                throw "Recv packet wrong";
+            }
+            else
+            {
+                ++PacketCount;
+            }
+        }
+        catch(char* str)
+        {
+            std::cout << "measureDelay: " << str << std::endl;
+        }
+        catch(std::exception& e)
+        {
+            std::cout << "Exception: " << e.what() << std::endl;
+        }
+    }  
 }

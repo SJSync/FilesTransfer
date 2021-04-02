@@ -130,7 +130,30 @@ bool Client::sendFile(const char path[])
     return true;
 }
 
-void Client::measureDelay()
+double Client::measureDelay()
 {
-    
+    int packetNum = 100;
+
+    while(packetNum--)
+    {
+        // 异常捕捉
+        try
+        {
+            memset(buf, 0, BUFSIZE);
+            if(send(s_socket, buf, BUFSIZE, 0) == -1)
+            {
+                throw "Send packet wrong";
+            }
+        }
+        catch(char* str)
+        {
+            std::cout << "measureDelay: " << str << std::endl;
+        }
+        catch(std::exception& e)
+        {
+            std::cout << "Exception: " << e.what() << std::endl;
+        }
+    }
+
+    send(s_socket, "sendDone", 9, 0);
 }
