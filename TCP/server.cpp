@@ -70,6 +70,10 @@ bool Server::work()
     strcpy(clientIp, inet_ntoa(tcpAddr.sin_addr));
     clientPort = ntohs(tcpAddr.sin_port);
 
+    // 测量延时
+    //std::cout << "Delay: " << measureDelay() << "ms" << std::endl;
+    memset(buf, 0, BUFSIZE);
+
     // 接收文件名
     recv(s_socket, filename, BUFSIZE, 0);
     strcpy(file, filename);
@@ -142,9 +146,20 @@ bool Server::recvFile(const char filename[], double& time)
     return true;
 }
 
-void Server::measureDelay()
+double Server::measureDelay()
 {
+    // 包数量
+    int packetNum = 0;
+
+    // 接收到的包数量
     int PacketCount = 0;
+
+    // 接收client发送包的数量
+    recv(s_socket, (char*)&packetNum, sizeof(packetNum), 0);
+
+    // 开始计时，获取当前系统时间
+    auto start = std::chrono::system_clock::now();
+
     while(true)
     {
         // 异常捕捉
@@ -154,6 +169,14 @@ void Server::measureDelay()
             if(recv(s_socket, buf, BUFSIZE, 0) == -1)
             {
                 throw "Recv packet wrong";
+            }
+            else if(strcmp(buf, "sendDone"))
+            {
+                // 接收到sendDone信号，说明client发送完毕
+                // 获取当前系统时间，得到所用时间，并转换为毫秒
+                std::chrono::duration<double> diff = std::chrono::system_clock::now() - start;
+                Delay = diff.count() * 1000;
+                break;
             }
             else
             {
@@ -168,5 +191,10 @@ void Server::measureDelay()
         {
             std::cout << "Exception: " << e.what() << std::endl;
         }
-    }  
+    }
+
+    // 发送延时
+    send(s_socket, (char*)&Delay, sizeof(Delay) + 1, 0);
+
+    return Delay;
 }

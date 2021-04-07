@@ -41,17 +41,20 @@ public:
     size_t sentBytes;
     std::string name;
 
+    // cilent与server之间的延时
+    double Delay;
+
 public:
     Client(const char addr[], const int port);
     ~Client();
 
     // TCP连接建立以及相关信息传输
     bool work(const char filename[]);
+    double measureDelay();
 
 private:
     // 通过套接字发送文件
     bool sendFile(const char filename[]);
-    double measureDelay();
 };
 
 #endif
