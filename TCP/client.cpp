@@ -66,8 +66,7 @@ bool Client::work(const char path[])
 
     // 测量延时
     //std::cout << "Delay: " << measureDelay() << "ms" << std::endl;
-    Sleep(100);
-    memset(buf, 0, BUFSIZE);
+    //memset(buf, 0, BUFSIZE);
 
     // 向远端发送文件名
     strcpy(buf, filename);
@@ -140,7 +139,7 @@ double Client::measureDelay()
     int packetNum = 100;
 
     // 发送包数量
-    send(s_socket, (char*)&packetNum, sizeof(packetNum) + 1, 0);
+    send(s_socket, (char*)&packetNum, sizeof(packetNum), 0);
 
     while(packetNum--)
     {

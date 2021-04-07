@@ -72,7 +72,7 @@ bool Server::work()
 
     // 测量延时
     //std::cout << "Delay: " << measureDelay() << "ms" << std::endl;
-    memset(buf, 0, BUFSIZE);
+    //memset(buf, 0, BUFSIZE);
 
     // 接收文件名
     recv(s_socket, filename, BUFSIZE, 0);
@@ -194,7 +194,7 @@ double Server::measureDelay()
     }
 
     // 发送延时
-    send(s_socket, (char*)&Delay, sizeof(Delay) + 1, 0);
+    send(s_socket, (char*)&Delay, sizeof(Delay), 0);
 
     return Delay;
 }
