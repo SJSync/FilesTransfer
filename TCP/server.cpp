@@ -72,7 +72,7 @@ bool Server::work()
     clientPort = ntohs(tcpAddr.sin_port);
 
     // 测量延时
-    measureDelay();
+    //measureDelay();
     memset(buf, 0, BUFSIZE);
 
     // 接收文件名
@@ -158,6 +158,8 @@ double Server::measureDelay()
     // 接收client发送包的数量
     recv(s_socket, (char*)&packetNum, sizeof(packetNum), 0);
 
+    send(s_socket, "recvDone", 9, 0);
+
     // 开始计时，获取当前系统时间
     auto start = std::chrono::system_clock::now();
 
@@ -168,7 +170,7 @@ double Server::measureDelay()
         {
             std::cout << "Recv packet wrong" << std::endl;
         }
-        else if(!strcmp(buf, "sendDone"))
+        else if(strcmp(buf, "sendDone") == 0)
         {
             // 接收到sendDone信号，说明client发送完毕
             // 获取当前系统时间，得到所用时间，并转换为毫秒

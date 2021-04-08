@@ -78,7 +78,7 @@ bool Client::work(const char path[])
 	char* filename = const_cast<char*>(name.c_str());
 
     // 测量延时
-    measureDelay();
+    //measureDelay();
     memset(buf, 0, BUFSIZE);
 
     // 向远端发送文件名
@@ -149,18 +149,23 @@ bool Client::sendFile(const char path[])
 
 double Client::measureDelay()
 {
-    int packetNum = 100;
+    int packetNum = 1000;
 
     // 发送包数量
     send(s_socket, (char*)&packetNum, sizeof(packetNum), 0);
 
-    while(packetNum--)
+    recv(s_socket, buf, BUFSIZE, 0);
+    if(strcmp(buf, "recvDone") == 0)
     {
-        memset(buf, 1, BUFSIZE);
-        if(send(s_socket, buf, BUFSIZE, 0) == -1)
+        while(packetNum)
         {
-            // 处理异常
-            std::cout << "Send packet wrong" << std::endl;
+            memset(buf, 1, BUFSIZE);
+            if(send(s_socket, buf, BUFSIZE, 0) == -1)
+            {
+                // 处理异常
+                std::cout << "Send packet wrong" << std::endl;
+            }
+            --packetNum;
         }
     }
 
