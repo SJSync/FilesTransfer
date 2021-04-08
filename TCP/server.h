@@ -3,9 +3,11 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <chrono>
-#include <winsock2.h> 
-#pragma comment(lib,"ws2_32.lib")
+#include <Winsock2.h> 
+#include <Ws2tcpip.h>
+#pragma comment(lib, "Ws2_32.lib")
 
 #define BUFSIZE 1024
 
@@ -54,12 +56,16 @@ public:
     // 接受文件所用时间
     double time;
 
+    // cilent与server之间的延时
+    double Delay;
+
 public:
     Server(const int port);
     ~Server();
     
     // TCP连接建立以及相关信息传输
     bool work();
+    double measureDelay();
 
 private:
     // 通过套接字接受文件
