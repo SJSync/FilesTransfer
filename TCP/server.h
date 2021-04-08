@@ -17,47 +17,25 @@ private:
     // socket版本
     WORD wVersionRequested;
     WSADATA wsaData;
+    SOCKET sockfd, s_socket;    // 描述服务器的套接字
+    struct sockaddr_in server;  // 描述服务器信息的结构体
+    struct sockaddr_in tcpAddr; // 描述客户端的结构体
+    
+    char buf[BUFSIZE];  // 缓冲数组
+    int rval = 0;       // 接受反馈
 
-    // 描述服务器的套接字
-    SOCKET sockfd, s_socket;
-
-    // 描述服务器信息的结构体
-    struct sockaddr_in server;
-
-    // 描述客户端的结构体
-    struct sockaddr_in tcpAddr;
-
-    // 缓冲数组
-    char buf[BUFSIZE];
-
-    // 接受反馈
-    int rval = 0;
-
-    // 文件流指针，用于打开文件
-    std::ofstream ofs;
+    std::ofstream ofs;  // 文件流指针，用于打开文件
 
 public:
-    // 存放文件名
-    char file[BUFSIZE];
-
-    // 存放客户端IP
-    char clientIp[128];
-
-    // 客户端端口
-    int clientPort;
+    char    file[BUFSIZE];  // 存放文件名
+    char    clientIp[128];  // 存放客户端IP
+    int     clientPort;     // 客户端端口
 
 public:
-    // 描述文件大小
-    size_t fileSize;
-
-    // 描述已接收的字节
-    size_t recvSize;
-
-    // 接受文件所用时间
-    double time;
-
-    // cilent与server之间的延时
-    double Delay;
+    size_t fileSize;    // 描述文件大小
+    size_t recvSize;    // 描述已接收的字节
+    double time;    // 接受文件所用时间
+    double Delay;   // cilent与server之间的延时
 
 public:
     Server(const int port);

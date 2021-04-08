@@ -50,13 +50,25 @@ Client::~Client()
 
 bool Client::work(const char path[])
 {
-    // 和远端建立连接
-    rval = connect(s_socket, (sockaddr*)&serverAddr, sizeof(serverAddr));
-    if (rval == -1) 
+    try
     {
-        // 返回错误
-        std::cout << "Can not create connect!" << std::endl;
-        exit(0);
+        // 和远端建立连接
+        rval = connect(s_socket, (sockaddr*)&serverAddr, sizeof(serverAddr));
+        if (rval == -1) 
+        {
+            // 抛出异常
+            throw "Can not create connect!";
+        }
+    }
+    catch(char* str)
+    {
+        std::cout << "Socket Wrong: " << str << std::endl;
+        return false;
+    }
+    catch(std::exception& e)
+    {
+        std::cout << "Exception: " << e.what() << std::endl;
+        return false;
     }
 
     // 从文件路径截取文件名
@@ -66,7 +78,7 @@ bool Client::work(const char path[])
 	char* filename = const_cast<char*>(name.c_str());
 
     // 测量延时
-    std::cout << "Delay: " << measureDelay() << "ms" << std::endl;
+    measureDelay();
     memset(buf, 0, BUFSIZE);
 
     // 向远端发送文件名
@@ -144,22 +156,11 @@ double Client::measureDelay()
 
     while(packetNum--)
     {
-        // 异常捕捉
-        try
+        memset(buf, 1, BUFSIZE);
+        if(send(s_socket, buf, BUFSIZE, 0) == -1)
         {
-            memset(buf, 1, BUFSIZE);
-            if(send(s_socket, buf, BUFSIZE, 0) == -1)
-            {
-                throw "Send packet wrong";
-            }
-        }
-        catch(char* str)
-        {
-            std::cout << "measureDelay: " << str << std::endl;
-        }
-        catch(std::exception& e)
-        {
-            std::cout << "Exception: " << e.what() << std::endl;
+            // 处理异常
+            std::cout << "Send packet wrong" << std::endl;
         }
     }
 

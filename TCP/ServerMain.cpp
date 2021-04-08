@@ -52,7 +52,8 @@ int main(int argc, char **argv)
             cout << left << setw(18) << server.clientIp;
             cout << left << setw(10) << "Successd:" << left << setw(20) << server.file;
             cout << " Size: " << left << setw(10) << std::to_string(server.fileSize / 1024 / 1024) + "MB";
-            cout << "  [" + std::to_string(server.fileSize * 8 / 1024 / 1024 / server.time) + "Mbps]" << endl;
+            cout << "  [" + std::to_string(server.fileSize * 8 / 1024 / 1024 / server.time) + "Mbps] ";
+            cout << " " << std::to_string(server.Delay) << endl;
         }
         // 如果文件接收失败，打印对应信息
         else

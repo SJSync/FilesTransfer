@@ -59,63 +59,37 @@ bool Server::work()
     char filename[BUFSIZE] = {0};
     int tcpAddrLenth = sizeof(tcpAddr);
 
-    try
+    // s_socket接受sockfd返回的socket描述符，tcpaddr存放客户端的信息
+    if((s_socket = accept(sockfd, (struct sockaddr*)&tcpAddr, &tcpAddrLenth)) == INVALID_SOCKET)
     {
-        // s_socket接受sockfd返回的socket描述符，tcpaddr存放客户端的信息
-        if((s_socket = accept(sockfd, (struct sockaddr*)&tcpAddr, &tcpAddrLenth)) == INVALID_SOCKET)
-        {
-            // 异常处理
-            throw "Accept exception";
-        }
+        // 异常处理
+        std::cout << "Accept exception";
+        exit(1);
+    }
 
-        // 转换IP地址
-        strcpy(clientIp, inet_ntoa(tcpAddr.sin_addr));
-        clientPort = ntohs(tcpAddr.sin_port);
-    }
-    catch(char* str)
-    {
-        std::cout << "Socket Wrong: " << str << std::endl;
-        return false;
-    }
-    catch(std::exception& e)
-    {
-        std::cout << "Exception: " << e.what() << std::endl;
-        return false;
-    }
-    
+    // 转换IP地址
+    strcpy(clientIp, inet_ntoa(tcpAddr.sin_addr));
+    clientPort = ntohs(tcpAddr.sin_port);
 
     // 测量延时
-    std::cout << "Delay: " << measureDelay() << "ms" << std::endl;
+    measureDelay();
     memset(buf, 0, BUFSIZE);
 
-    try
-    {
-        // 接收文件名
-        recv(s_socket, filename, BUFSIZE, 0);
-        strcpy(file, filename);
+    // 接收文件名
+    recv(s_socket, filename, BUFSIZE, 0);
+    strcpy(file, filename);
 
-        // 发送确认信息
-        strcpy(buf, "recv");
-        send(s_socket, buf, BUFSIZE, 0);
+    // 发送确认信息
+    strcpy(buf, "recv");
+    send(s_socket, buf, BUFSIZE, 0);
 
-        // 接受文件
-        if(!recvFile(filename, time))
-        {
-            throw "RecvFile Failed";
-        }
-        // 接收成功后就关闭套接字
-        closesocket(s_socket);
-    }
-    catch(char* str)
+    // 接受文件
+    if(!recvFile(filename, time))
     {
-        std::cout << "Recv Wrong: " << str << std::endl;
         return false;
     }
-    catch(std::exception& e)
-    {
-        std::cout << "Exception: " << e.what() << std::endl;
-        return false;
-    }
+    // 接收成功后就关闭套接字
+    closesocket(s_socket);
 
     return true;
 }
@@ -189,34 +163,22 @@ double Server::measureDelay()
 
     while(true)
     {
-        // 异常捕捉
-        try
+        memset(buf, 0, BUFSIZE);
+        if(recv(s_socket, buf, BUFSIZE, 0) == -1)
         {
-            memset(buf, 0, BUFSIZE);
-            if(recv(s_socket, buf, BUFSIZE, 0) == -1)
-            {
-                throw "Recv packet wrong";
-            }
-            else if(!strcmp(buf, "sendDone"))
-            {
-                // 接收到sendDone信号，说明client发送完毕
-                // 获取当前系统时间，得到所用时间，并转换为毫秒
-                std::chrono::duration<double> diff = std::chrono::system_clock::now() - start;
-                Delay = diff.count();
-                break;
-            }
-            else
-            {
-                ++PacketCount;
-            }
+            std::cout << "Recv packet wrong" << std::endl;
         }
-        catch(char* str)
+        else if(!strcmp(buf, "sendDone"))
         {
-            std::cout << "measureDelay: " << str << std::endl;
+            // 接收到sendDone信号，说明client发送完毕
+            // 获取当前系统时间，得到所用时间，并转换为毫秒
+            std::chrono::duration<double> diff = std::chrono::system_clock::now() - start;
+            Delay = diff.count();
+            break;
         }
-        catch(std::exception& e)
+        else
         {
-            std::cout << "Exception: " << e.what() << std::endl;
+            ++PacketCount;
         }
     }
 
