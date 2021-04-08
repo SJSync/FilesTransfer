@@ -24,7 +24,8 @@ Client::Client(const char addr[], const int port)
     }
 
     //unsigned char service_type = IPTOS_RELIABILITY;
-    //setsockopt(s_socket, IPPROTO_IP, IP_TOS, (char*)&tos, sizeof(tos));
+    //int IPTOS_RELIABILITY = 20;
+    //setsockopt(s_socket, IPPROTO_IP, IP_TOS, (char*)&IPTOS_RELIABILITY, sizeof(IPTOS_RELIABILITY));
 
     // 设置地址簇为Internet协议族
     serverAddr.sin_family = AF_INET;
@@ -65,8 +66,8 @@ bool Client::work(const char path[])
 	char* filename = const_cast<char*>(name.c_str());
 
     // 测量延时
-    //std::cout << "Delay: " << measureDelay() << "ms" << std::endl;
-    //memset(buf, 0, BUFSIZE);
+    std::cout << "Delay: " << measureDelay() << "ms" << std::endl;
+    memset(buf, 0, BUFSIZE);
 
     // 向远端发送文件名
     strcpy(buf, filename);
