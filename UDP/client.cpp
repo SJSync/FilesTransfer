@@ -4,15 +4,15 @@
 // 构造函数，初始化socket
 Client::Client(const char addr[], const int port)
 {
-    // 初始化文件大小和已发送字节
-    fileSize = 0;
-    sentBytes = 0;
+    
+    fileSize = 0;//文件大小
+    sentBytes = 0;//已发送字节
 
-    // 初始化socket版本
+    // socket版本
     wVersionRequested = MAKEWORD(2, 2);
     WSAStartup(wVersionRequested, &wsaData);
 
-    // 建立描述服务器的套接字
+    // 建立套接字
     if ((s_socket = socket(AF_INET, SOCK_DGRAM, 0)) == INVALID_SOCKET)
     {
         std::cout << "Can not create socket!" << std::endl;
