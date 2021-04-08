@@ -53,7 +53,7 @@ int main(int argc, char **argv)
         if(flag)
         {
             cout << left << setw(10) << "Successd: " << left << setw(20) << client->name;
-            cout << " Size: " + std::to_string(client->fileSize / 1024 / 1024) + "MB" << endl;
+            cout << " Size: " + std::to_string(client->fileSize / 1024 / 1024) + "MB " << endl;
         }
         // 如果文件传输失败，打印对应信息
         else

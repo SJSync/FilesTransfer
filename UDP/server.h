@@ -23,7 +23,7 @@ private:
     struct sockaddr_in server;
 
     // 描述客户端的结构体
-    struct sockaddr_in tcpAddr;
+    struct sockaddr_in udpAddr;
 
     // 缓冲数组
     char buf[BUFSIZE];

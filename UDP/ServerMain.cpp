@@ -40,10 +40,10 @@ int main(int argc, char **argv)
     int port = atoi(argv[1]);
     bool flag = false;
 
+    // 新建一个Server对象
+    Server server(port);
     while(true)
     {
-        // 新建一个Server对象
-        Server server(port);
         // 开始文件接收
         flag = server.work();
         // 如果文件接收成功，打印对应信息

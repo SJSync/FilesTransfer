@@ -19,30 +19,19 @@ private:
     // socket版本
     WORD wVersionRequested;
     WSADATA wsaData;
-
-    // 描述服务器的套接字
-    SOCKET s_socket;
+    SOCKET s_socket;    // 描述服务器的套接字
     struct sockaddr_in serverAddr;
-
-    // 缓冲数组
-    char buf[BUFSIZE];
-
-    // 接受反馈
-    int rval = 0;
-
-    // 文件流指针，用于打开文件
-    std::ifstream ifs;
+    
+    char buf[BUFSIZE];  // 缓冲数组
+    int rval = 0;   // 接受反馈
+    
+    std::ifstream ifs;  // 文件流指针，用于打开文件
 
 public:
-    // 描述文件大小
-    size_t fileSize;
-
-    // 描述已发送的字节
-    size_t sentBytes;
-    std::string name;
-
-    // cilent与server之间的延时
-    double Delay;
+    size_t      fileSize;    // 描述文件大小
+    size_t      sentBytes;   // 描述已发送的字节
+    std::string name;   // 发送的文件名
+    double Delay;   // cilent与server之间的延时
 
 public:
     Client(const char addr[], const int port);
