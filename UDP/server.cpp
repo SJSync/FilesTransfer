@@ -1,16 +1,17 @@
 #include "server.h"
 
 
-// 构造函数，初始化socket
+// 初始化socket
 Server::Server(const int port)
 {
-    // 初始化socket版本
+    // socket版本
     wVersionRequested = MAKEWORD(2, 2);
     WSAStartup(wVersionRequested, &wsaData);
 
-    // 建立描述服务器的套接字
+    // 建立套接字
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) == INVALID_SOCKET)
     {
+        //异常处理
         std::cout << "Can not create socket!" << std::endl;
         exit(0);
     }
@@ -50,19 +51,19 @@ Server::~Server()
 bool Server::work()
 {
     char filename[BUFSIZE] = {0};
-    int tcpAddrLenth = sizeof(tcpAddr);
+    int udpAddrLenth = sizeof(udpAddr);
 
     // 接收文件名
-    recvfrom(sockfd, filename, BUFSIZE, 0, (struct sockaddr*)&tcpAddr, &tcpAddrLenth);
+    recvfrom(sockfd, filename, BUFSIZE, 0, (struct sockaddr*)&udpAddr, &udpAddrLenth);
     strcpy(file, filename);
 
     // 转换IP地址
-    strcpy(clientIp, inet_ntoa(tcpAddr.sin_addr));
-    clientPort = ntohs(tcpAddr.sin_port);
+    strcpy(clientIp, inet_ntoa(udpAddr.sin_addr));
+    clientPort = ntohs(udpAddr.sin_port);
 
     // 发送确认信息
     strcpy(buf, "recv");
-    sendto(sockfd, buf, BUFSIZE, 0, (struct sockaddr*)&tcpAddr, sizeof(tcpAddr));
+    sendto(sockfd, buf, BUFSIZE, 0, (struct sockaddr*)&udpAddr, sizeof(udpAddr));
 
     // 接受文件
     if(!recvFile(filename, time))
@@ -71,7 +72,7 @@ bool Server::work()
     }
     // 发送接受完成的信息
     strcpy(buf, "recvDone");
-    sendto(sockfd, buf, BUFSIZE, 0, (struct sockaddr*)&tcpAddr, sizeof(tcpAddr));
+    sendto(sockfd, buf, BUFSIZE, 0, (struct sockaddr*)&udpAddr, sizeof(udpAddr));
     // 接收成功后就关闭套接字
     closesocket(sockfd);
 
@@ -83,8 +84,8 @@ bool Server::recvFile(const char filename[], double& time)
     // 获取当前系统时间
     auto start = std::chrono::system_clock::now();
 
-    // readLen标识从文件流中读取到buf缓冲数组中的字节数
     recvSize = 0;
+    // readLen标识从文件流中读取到buf缓冲数组中的字节数
     int readLen = 0;
 
     // 创建接受的文件流
@@ -99,8 +100,8 @@ bool Server::recvFile(const char filename[], double& time)
     memset(buf, 0, sizeof(buf));
     do
     {
-        int tcpAddrLenth = sizeof(tcpAddr);
-        readLen = recvfrom(sockfd, buf, BUFSIZE, 0, (struct sockaddr*)&tcpAddr, &tcpAddrLenth);
+        int tcpAddrLenth = sizeof(udpAddr);
+        readLen = recvfrom(sockfd, buf, BUFSIZE, 0, (struct sockaddr*)&udpAddr, &tcpAddrLenth);
         if(readLen == -1)
 	    {
             // 异常处理
