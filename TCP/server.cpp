@@ -58,37 +58,64 @@ bool Server::work()
 {
     char filename[BUFSIZE] = {0};
     int tcpAddrLenth = sizeof(tcpAddr);
-    // s_socket接受sockfd返回的socket描述符，tcpaddr存放客户端的信息
-    if((s_socket = accept(sockfd, (struct sockaddr*)&tcpAddr, &tcpAddrLenth)) == INVALID_SOCKET)
+
+    try
     {
-        // 异常处理
-        std::cout << "Accept exception" << std::endl;
-        exit(0);
+        // s_socket接受sockfd返回的socket描述符，tcpaddr存放客户端的信息
+        if((s_socket = accept(sockfd, (struct sockaddr*)&tcpAddr, &tcpAddrLenth)) == INVALID_SOCKET)
+        {
+            // 异常处理
+            throw "Accept exception";
+        }
+
+        // 转换IP地址
+        strcpy(clientIp, inet_ntoa(tcpAddr.sin_addr));
+        clientPort = ntohs(tcpAddr.sin_port);
+    }
+    catch(char* str)
+    {
+        std::cout << "Socket Wrong: " << str << std::endl;
+        return false;
+    }
+    catch(std::exception& e)
+    {
+        std::cout << "Exception: " << e.what() << std::endl;
+        return false;
     }
     
-    // 转换IP地址
-    strcpy(clientIp, inet_ntoa(tcpAddr.sin_addr));
-    clientPort = ntohs(tcpAddr.sin_port);
 
     // 测量延时
     std::cout << "Delay: " << measureDelay() << "ms" << std::endl;
     memset(buf, 0, BUFSIZE);
 
-    // 接收文件名
-    recv(s_socket, filename, BUFSIZE, 0);
-    strcpy(file, filename);
-
-    // 发送确认信息
-    strcpy(buf, "recv");
-    send(s_socket, buf, BUFSIZE, 0);
-
-    // 接受文件
-    if(!recvFile(filename, time))
+    try
     {
+        // 接收文件名
+        recv(s_socket, filename, BUFSIZE, 0);
+        strcpy(file, filename);
+
+        // 发送确认信息
+        strcpy(buf, "recv");
+        send(s_socket, buf, BUFSIZE, 0);
+
+        // 接受文件
+        if(!recvFile(filename, time))
+        {
+            throw "RecvFile Failed";
+        }
+        // 接收成功后就关闭套接字
+        closesocket(s_socket);
+    }
+    catch(char* str)
+    {
+        std::cout << "Recv Wrong: " << str << std::endl;
         return false;
     }
-    // 接收成功后就关闭套接字
-    closesocket(s_socket);
+    catch(std::exception& e)
+    {
+        std::cout << "Exception: " << e.what() << std::endl;
+        return false;
+    }
 
     return true;
 }
