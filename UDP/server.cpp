@@ -100,8 +100,8 @@ bool Server::recvFile(const char filename[], double& time)
     memset(buf, 0, sizeof(buf));
     do
     {
-        int tcpAddrLenth = sizeof(udpAddr);
-        readLen = recvfrom(sockfd, buf, BUFSIZE, 0, (struct sockaddr*)&udpAddr, &tcpAddrLenth);
+        int udpAddrLenth = sizeof(udpAddr);
+        readLen = recvfrom(sockfd, buf, BUFSIZE, 0, (struct sockaddr*)&udpAddr, &udpAddrLenth);
         if(readLen == -1)
 	    {
             // 异常处理
