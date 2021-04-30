@@ -11,19 +11,18 @@
 extern std::mutex sleepMutex;
 extern std::condition_variable condition;
 
-class Timer
-{
-private:
-    int timeout;
-    bool isRunning;
+class Timer {
+ private:
+  int timeout;
+  bool isRunning;
 
-public:;
-    void start(const size_t&fileSize, const size_t& sentBytes);   
-    void stop();
+ public:;
+  void start(const size_t &fileSize, const size_t &sentBytes);
+  void stop();
 
-public:
-    Timer(double timeout);
-    ~Timer();
+ public:
+  Timer(double timeout);
+  ~Timer();
 };
 
 #endif
