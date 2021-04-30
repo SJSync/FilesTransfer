@@ -1,5 +1,8 @@
 test/
 .vscode/
+.idea/
+cmake-*/
+CMakeLists.txt
 *.exe
 *.zip
 *.rar
